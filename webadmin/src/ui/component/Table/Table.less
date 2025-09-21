@@ -1,0 +1,59 @@
+@import '../../../shared/css/global.variables.less';
+@import '../../../shared/css/index.less';
+
+.ant-custom-table {
+  :global(.ant-table-content) {
+    overflow-x: auto !important;
+  }
+
+  .table-search {
+    padding: 0;
+    :global(.ant-form-item-label) {
+      flex: unset !important;
+    }
+    :global(.ant-form-item-label label) {
+      font-weight: 700;
+      /* Force wrapping for long words */
+      white-space: normal;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+    }
+  }
+  .table-content {
+  }
+  :global(.ant-pro-card-body) {
+    padding-inline: 0px !important;
+  }
+  table {
+    thead tr th {
+      color: @tableHeaderColor !important;
+      background-color: @tableHeaderBackgroundColor !important;
+      border-right: 1px solid #fff;
+      border-bottom: 1px solid #fff !important;
+    }
+    tbody tr {
+      td {
+        padding: @table-body-cell-padding !important;
+        border-right: 1px solid #e7eaec;
+        border-bottom: 1px solid #e7eaec;
+        border-left: 1px solid #e7eaec;
+      }
+      :global(.ant-table-cell-row-hover) {
+        color: @tableCellRowHoverColor !important;
+        background: @tableCellRowHoverBackgroundColor !important;
+
+        &::after {
+          display: none !important;
+        }
+      }
+
+      :global(.ant-table-cell-fix-right.ant-table-cell-row-hover) {
+        z-index: 1;
+      }
+    }
+  }
+
+  .pagination-margin {
+    margin-bottom: 16px !important;
+  }
+}

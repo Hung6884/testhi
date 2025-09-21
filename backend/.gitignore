@@ -1,0 +1,24 @@
+.idea/
+.vscode/
+node_modules/
+build/
+tmp/
+temp/
+public/
+src/configs/permission.config.json
+src/configs/app.config.json
+dist*/
+release/
+package-lock.json
+.env
+ 
+# node-red
+*.json.backup
+ 
+# misc
+**/.DS_Store
+.DS_Store
+!src/renderers/permissions.json
+# configs
+.eslintrc.json
+jsconfig.json

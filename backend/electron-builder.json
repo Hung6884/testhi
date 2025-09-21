@@ -1,0 +1,86 @@
+{
+  "productName": "Toolchain",
+  "appId": "org.fsoft.toolchain.toolchain",
+  "asar": true,
+  "buildDependenciesFromSource": true,
+  "files": [
+    "**/*",
+    {
+      "from": "node_modules/@node-red/nodes/examples",
+      "to": "node_modules/@node-red/nodes/examples"
+    },
+    {
+      "from": "patch/registry/lib",
+      "to": "node_modules/@node-red/registry/lib"
+    },
+    {
+      "from": "patch/util/lib",
+      "to": "node_modules/@node-red/util/lib"
+    },
+    "src/*",
+    "src/",
+    "node_modules/",
+    "package.json",
+    ".env",
+    "html"
+  ],
+  "mac": {
+    "target": ["dmg"],
+    "type": "distribution",
+    "hardenedRuntime": true,
+    "entitlements": "./src/assets/entitlements.mac.plist",
+    "entitlementsInherit": "./src/assets/entitlements.mac.plist",
+    "icon": "./src/assets/icons/icon.icns",
+    "gatekeeperAssess": false,
+    "identity": null
+  },
+  "dmg": {
+    "icon": "./src/assets/icons/icon.icns",
+    "contents": [
+      {
+        "x": 130,
+        "y": 220
+      },
+      {
+        "x": 410,
+        "y": 220,
+        "type": "link",
+        "path": "/Applications"
+      }
+    ]
+  },
+  "win": {
+    "target": ["nsis", "portable"],
+    "icon": "./src/assets/icons/icon.ico"
+  },
+  "nsis": {
+    "oneClick": false,
+    "perMachine": false,
+    "allowElevation": true,
+    "allowToChangeInstallationDirectory": true,
+    "deleteAppDataOnUninstall": false
+  },
+  "linux": {
+    "target": ["AppImage"],
+    "category": "Development"
+  },
+  "extends": null,
+  "directories": {
+    "buildResources": "./src/assets",
+    "output": "release"
+  },
+  "extraResources": [
+    {
+      "from": "./src/renderers",
+      "to": "./renderers"
+    },
+    {
+      "from": "./src/assets",
+      "to": "./assets"
+    },
+    {
+      "from": "./public/.node-red",
+      "to": "./public/.node-red"
+    }
+  ]
+}

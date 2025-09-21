@@ -1,0 +1,305 @@
+@import '../../../shared/css/antd-variables.less';
+@import '../../../shared/css/global.variables.less';
+
+@content-height: calc(100vh - 100px);
+
+#indexlayout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+#indexlayout-right {
+  position: relative;
+  flex: 1;
+  overflow: auto;
+  background-color: @mainBgColor;
+
+  &.fixed-header {
+    display: flex;
+    flex-direction: column;
+
+    .indexlayout-right-main {
+      flex: 1;
+      overflow: auto;
+      margin-bottom: 50px;
+    }
+  }
+}
+
+.indexlayout-top-usermenu {
+  width: fit-content;
+  padding-right: 20px;
+  color: #000;
+  cursor: pointer;
+}
+
+#indexlayout-left {
+  display: flex;
+  flex-direction: column;
+  width: @leftSideBarWidth;
+  height: 100vh;
+  color: #c0c4cc;
+  background-color: @menu-bg;
+  transition-duration: 0.1s;
+
+  .indexlayout-left-logo {
+    width: 100%;
+    height: @headerHeight;
+    line-height: @headerHeight;
+    text-align: center;
+    vertical-align: middle;
+
+    /* background-color: $subMenuBg; */
+    .logo-url {
+      display: inline-block;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+
+      .logo-title {
+        display: inline-block;
+        margin: 0;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 16px;
+      }
+    }
+
+    img {
+      vertical-align: middle;
+    }
+  }
+
+  .indexlayout-left-menu {
+    flex: 1;
+    overflow: auto;
+    padding-left: 24px;
+
+    // height: calc(100vh);
+    .left-scrollbar {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .indexlayout-left-menu::-webkit-scrollbar {
+    width: 4px;
+    background: transparent;
+    border: unset !important;
+    /* width of the entire scrollbar */
+  }
+
+  .indexlayout-left-menu::-webkit-scrollbar-track {
+    background: transparent;
+    border: unset !important;
+    /* color of the tracking area */
+  }
+
+  .indexlayout-left-menu::-webkit-scrollbar-thumb {
+    background-color: rgba(24, 143, 255, 0.685);
+    /* roundness of the scroll thumb */
+    border: unset !important;
+    /* color of the scroll thumb */
+    border-radius: 30px;
+    /* creates padding around scroll thumb */
+  }
+
+  &.narrow {
+    width: @menu-collapsed-width;
+  }
+}
+
+#indexlayout-right-top {
+  position: sticky;
+  top: 0;
+  z-index: 20;
+  width: 100%;
+  height: (@headerHeight + @headerBreadcrumbHeight);
+  box-shadow: 0 1px 4px rgba(0, 21, 41, 0.08);
+
+  .indexlayout-right-top-top {
+    display: flex;
+    width: 100%;
+    height: @headerHeight;
+    color: #c0c4cc;
+
+    .indexlayout-flexible {
+      width: @headerHeight;
+      height: @headerHeight;
+      line-height: @headerHeight;
+      text-align: center;
+      cursor: pointer;
+
+      &:hover {
+        color: @menu-highlight-color;
+        background-color: @menu-inline-submenu-bg;
+      }
+    }
+
+    .indexlayout-top-menu {
+      display: flex;
+      flex: 1;
+      height: @headerHeight;
+      overflow: hidden;
+      line-height: @headerHeight;
+
+      /* overflow-x: auto; */
+      .indexlayout-top-menu-li {
+        display: inline-block;
+        height: @headerHeight;
+        padding: 0 15px;
+        color: #c0c4cc;
+        font-size: 15px;
+        text-decoration: none;
+        border-bottom: solid 3px transparent;
+
+        &:hover,
+        &.active {
+          color: @menu-highlight-color;
+          background-color: @menu-inline-submenu-bg;
+          border-bottom-color: #22395a;
+        }
+      }
+
+      .breadcrumb {
+        line-height: @headerHeight;
+      }
+
+      .breadcrumb li:last-child > span > a {
+        color: @page-header-color;
+        font-weight: bold;
+        font-size: 20px;
+      }
+    }
+  }
+
+  .indexlayout-right-top-bot {
+    display: flex;
+    width: 100%;
+    height: @headerBreadcrumbHeight;
+    background-color: @mainBgColor;
+
+    .indexlayout-right-top-bot-home {
+      width: @headerBreadcrumbHeight;
+      height: @headerBreadcrumbHeight;
+      line-height: @headerBreadcrumbHeight;
+      text-align: center;
+    }
+
+    .breadcrumb {
+      margin-left: 10px;
+      line-height: @headerBreadcrumbHeight;
+    }
+  }
+
+  &.topNavEnable {
+    height: @headerHeight;
+
+    .indexlayout-right-top-top {
+      color: @text-color;
+      background-color: #ffffff;
+
+      .indexlayout-flexible {
+        &:hover {
+          color: @heading-color;
+          background-color: @mainBgColor;
+        }
+      }
+
+      .indexlayout-top-menu-right {
+        .indexlayout-top-message {
+          color: @heading-color;
+        }
+
+        .indexlayout-top-usermenu {
+          color: #000;
+        }
+      }
+    }
+  }
+}
+
+.indexlayout-right-footer {
+  height: 50px;
+  overflow: hidden;
+  color: #808695;
+  font-size: 14px;
+  text-align: center;
+  position: fixed;
+  bottom: 0;
+  left: @leftSideBarWidth;
+  right: 0;
+  background-color: @mainBgColor;
+  z-index: 10;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 15px;
+
+  /* Handle collapsed sidebar */
+  &.collapsed {
+    left: @menu-collapsed-width;
+  }
+
+  .footer-links {
+    margin-bottom: 10px;
+
+    a {
+      margin-right: 30px;
+      color: #808695;
+      text-decoration: none;
+
+      &:last-child {
+        margin-right: 0;
+      }
+
+      &:hover {
+        color: #515a6e;
+      }
+    }
+  }
+}
+
+.scrollbar-thumb {
+  background-color: rgba(144, 147, 153, 0.5);
+  border-radius: inherit;
+}
+
+.indexlayout-footer-toolbar {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: @leftSideBarWidth;
+  z-index: 99;
+  height: 56px;
+  padding: 0 24px;
+  line-height: 56px;
+  background: #fff;
+  border-top: 1px solid #f0f0f0;
+  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.03);
+  transition-duration: 0.1s;
+
+  &.narrow {
+    left: @menu-collapsed-width;
+  }
+}
+
+:global(.indexlayout-main-content) {
+  position: relative;
+  min-height: @content-height;
+
+  :global(.indexlayout-title) {
+    margin-bottom: 0;
+    color: #3084ff;
+    font-weight: bold;
+    font-size: 36px;
+  }
+
+  :global(.indexlayout-line) {
+    margin-bottom: 16px;
+  }
+
+  :global(.ant-page-header-footer) {
+    margin-top: 24px;
+    margin-block-start: 24px !important;
+  }
+}

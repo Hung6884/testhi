@@ -1,0 +1,114 @@
+@import './antd-variables.less';
+@import './mixin.less';
+@import './global.variables.less';
+
+.ant-pro-page-container-content {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.ant-modal-footer {
+  padding: 10px 24px !important;
+  border-top: none !important;
+}
+
+//Button
+:global(.button-icon) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+//End Button
+
+//
+:global(.cell-actions) {
+  gap: 0px !important;
+}
+
+//
+
+//Tab
+:global(.ant-custom-tab) {
+  margin-top: -24px !important;
+  color: rgb(141, 148, 156);
+  font-size: 13px !important;
+
+  :global(.ant-tabs-nav) {
+    border-bottom: 1px solid #f0f0f0 !important;
+  }
+
+  :global(.ant-tabs-content-holder) {
+    margin-top: 16px !important;
+  }
+}
+
+.close-icon {
+  color: @error-color;
+}
+
+.warning-icon {
+  color: @warning-color;
+}
+
+.active-icon {
+  color: @success-color;
+}
+
+.mb-0 {
+  margin-bottom: 0;
+}
+
+.ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+//Row
+
+.ant-row.sector-input-group {
+  padding: 0 24px !important;
+}
+
+// Collapse
+
+.ant-collapse > .ant-collapse-item > .ant-collapse-header {
+  align-items: center !important;
+}
+
+// Page Container
+:global(.ant-pro-page-container .ant-pro-page-container-warp-page-header) {
+  padding-inline-start: 41px !important;
+  padding-inline-end: 41px !important;
+}
+
+// Modal
+:global(.ant-modal-header) {
+  background-color: #ececec;
+
+  :global(.ant-modal-title) {
+    color: #767676 !important;
+    font-weight: bold !important;
+    font-size: 14px;
+    text-transform: uppercase !important;
+  }
+}
+
+.custom-modal {
+  .ant-modal-body {
+    padding-bottom: 10px !important;
+  }
+}
+
+.create-modal {
+  .ant-modal-footer {
+    padding: 10px 60px !important;
+  }
+}
+
+.detail-modal {
+  .ant-descriptions-item-content {
+    color: rgba(0, 0, 0, 0.85) !important;
+  }
+}

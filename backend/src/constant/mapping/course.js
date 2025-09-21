@@ -1,0 +1,16 @@
+module.exports = {
+  id: 'khoa_hoc_id',
+  report1Code: 'mabc_1',
+  code: 'ma_kh',
+  name: 'ten_kh',
+  csdtCode: 'ma_csdt',
+  trainingCategory: 'hang_dao_tao',
+  courseStartDate: 'ngay_kg',
+  courseEndDate: 'ngay_bg',
+  trainingDate: 'ngay_dao_tao',
+  examinationDate: 'ngay_sat_hach',
+  internalTraining: 'dao_tao_noi_bo',
+  createdDate: 'create_date',
+  updatedDate: 'updated_date',
+  isActive: 'is_active',
+};

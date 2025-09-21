@@ -1,0 +1,17 @@
+module.exports = {
+  id: 'id',
+  licensePlate: 'bien_so_xe',
+  owner: 'chu_so_huu',
+  issuingAuthority: 'co_quan_cap_gpxtl',
+  drivingLicenseCategory: 'hang_gplx',
+  code: 'ma_xe',
+  csdtCode: 'ma_csdt',
+  manufacturingYear: 'nam_sx',
+  licenseIssueDate: 'ngay_cap_gpxtl',
+  licenseExpiryDate: 'ngay_hhgpxtl',
+  registrationNumber: 'so_dk',
+  licenseNumber: 'so_gpxtl',
+  isActive: 'is_active',
+  datDeviceId: 'dat_device_id',
+  datDeviceSerial: 'dat_device_serial',
+};
