@@ -7,8 +7,8 @@ const componentsSettings = {
 };
 
 const settings = {
-  siteTitle: 'Dangquang',
-  siteName: 'Distant and Time Management',
+  siteTitle: 'Đăng Quang',
+  siteName: 'Đăng Quang Project',
   productName: 'dat-management',
   appId: 'dat-management',
   domain: get(process, 'env.DOMAIN') || 'localhost',

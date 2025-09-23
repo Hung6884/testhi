@@ -3,7 +3,7 @@ import commonViVN from '../shared/i18n/vi-VN';
 export default {
   ...commonViVN,
   //routes
-  'route.monitoring.journey': 'Quản lý công nợ khách hàng',
+  'route.debtManagement': 'Quản lý công nợ khách hàng',
   'route.management': 'Quản lý công nợ kho thương mại',
   'route.report': 'Quản lý người dùng',
   'route.system': 'Hệ thống',

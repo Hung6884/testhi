@@ -6,26 +6,9 @@ import { getNotFoundRoute, umiRoutes } from '../utils/routes';
 export const IndexLayoutRoutes = [
   {
     icon: '',
-    title: 'route.monitoring.journey',
-    path: '/monitoring-journey',
-    routes: [
-      {
-        icon: '',
-        title: 'route.training.vehicle',
-        path: '/monitoring-journey/training-vehicle',
-        component: '@/pages/MonitoringJourney/TrainingVehicle',
-      },
-      {
-        icon: '',
-        title: 'route.training.course',
-        path: '/monitoring-journey/training-course',
-      },
-      {
-        icon: '',
-        title: 'route.training.session',
-        path: '/monitoring-journey/training-session',
-      },
-    ],
+    title: 'route.debtManagement',
+    path: '/debtManagement',
+    component: 'DebtManagement', 
   },
   {
     icon: '',
