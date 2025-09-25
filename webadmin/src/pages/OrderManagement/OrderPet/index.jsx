@@ -2,12 +2,12 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { Button, Card, Col, DatePicker, Form, Input, Row, Select, Table, Tag, Typography, message } from 'antd';
 import moment from 'moment';
 import './index.less';
+import { getListProductionOrdersPet, getPetSummary } from '../../DebtManagement/service/be.api';
 
 const { RangePicker } = DatePicker;
-const { Option } = Select;
 const { Text } = Typography;
 
-/** ---- labels (theo Angular) ---- */
+/** ---- labels ---- */
 const STATUS_LABEL = {
   CREATED: 'Chưa duyệt',
   APPROVAL: 'Chưa in',
@@ -66,31 +66,16 @@ const lstMachine = [
   { value: '15', label: 'Máy in PET - 03' },
 ];
 
-/**
- * Props:
- * - onFetchList:      (body:{}) => Promise<{list:any[], count:number}>
- * - onFetchTotalPrice:(body:{}) => Promise<number>
- * - onFetchTotalQty:  (body:{}) => Promise<number>
- * - role guards (optional): isAdmin, isSubAdmin, isAccountant, isPetCreator, isPetProcessor
- */
-export default function OrderPet({
-  onFetchList,
-  onFetchTotalPrice,
-  onFetchTotalQty,
-  isAdmin = () => true,
-  isSubAdmin = () => true,
-  isAccountant = () => true,
-  isPetCreator = () => false,
-  isPetProcessor = () => false,
-}) {
+export default function OrderPET() {
   const [form] = Form.useForm();
 
-  // params như Angular (PET)
+  // params giống Angular PET
   const [params, setParams] = useState({
     code: undefined,
     orderCode: undefined,
     customerName: undefined,
     customerCode: undefined,
+    billetPrinterName: undefined,
 
     status: null,
     paymentStatus: null,
@@ -101,8 +86,6 @@ export default function OrderPet({
     toOrderTime: null,
     fromCreatedTime: null,
     toCreatedTime: null,
-
-    billetPrinterName: undefined,
   });
 
   // table state
@@ -113,34 +96,32 @@ export default function OrderPet({
   const [pageSize, setPageSize] = useState(20);
 
   // totals
-  const [totalPrice, setTotalPrice] = useState(0);
-  const [totalQuantity, setTotalQuantity] = useState(0);
+  const [summary, setSummary] = useState({
+    totalPrice: 0,
+    totalQuantity: 0,
+  });
 
-  // build body theo đúng Angular.addMoreBodyParams (PET)
-  const buildBody = useMemo(() => {
-    const body = {
-      pageSize,
-      pageNumber,
-      isDelete: 'NO',
-    };
+  // quyền – mock như ví dụ của bạn
+  const isAdmin = () => true;
+  const isSubAdmin = () => true;
+  const isAccountant = () => true;
+  const isPetCreator = () => false;
+  const isPetProcessor = () => false;
 
-    // text fields
+  // build body như Angular addMoreBodyParams (PET)
+  const buildBody = (extra = {}) => {
+    const body = { ...extra };
+
     ['code', 'orderCode', 'customerName', 'customerCode', 'billetPrinterName'].forEach((k) => {
-      const v = params[k];
-      if (v != null && v !== '') body[k] = String(v).trim();
+      if (params[k] != null && params[k] !== '') body[k] = String(params[k]).trim();
     });
 
-    // time ranges
     ['fromOrderTime', 'toOrderTime', 'fromCreatedTime', 'toCreatedTime'].forEach((k) => {
       if (params[k] != null) body[k] = params[k];
     });
 
-    // payment status
-    if (params.paymentStatus != null && params.paymentStatus !== 'null') {
-      body.paymentStatus = params.paymentStatus;
-    }
+    if (params.paymentStatus != null && params.paymentStatus !== 'null') body.paymentStatus = params.paymentStatus;
 
-    // listBeingProduced => lstStatus preset
     if (params.listBeingProduced != null && params.listBeingProduced !== 'null') {
       body.listBeingProduced = ['APPROVAL', 'PRINTING', 'PRINTED', 'EXTRACTING', 'EXTRACTED', 'CUTTED'];
       body.lstStatus = ['APPROVAL', 'PRINTING', 'PRINTED', 'EXTRACTING', 'EXTRACTED', 'CUTTED'];
@@ -149,49 +130,38 @@ export default function OrderPet({
       body.lstStatus = [];
     }
 
-    // single status has priority
     if (params.status !== null && params.status !== 'null') {
       body.lstStatus = [params.status];
-    } else {
-      if (params.listBeingProduced != null && params.listBeingProduced !== 'null') {
-        body.lstStatus = ['APPROVAL', 'PRINTING', 'PRINTED', 'EXTRACTING', 'EXTRACTED', 'CUTTED'];
-      } else {
-        body.lstStatus = [];
-      }
+    } else if (params.listBeingProduced != null && params.listBeingProduced !== 'null') {
+      body.lstStatus = ['APPROVAL', 'PRINTING', 'PRINTED', 'EXTRACTING', 'EXTRACTED', 'CUTTED'];
     }
 
-    // machine
     if (params.machine != null && params.machine !== 'null') {
       body.machine = params.machine;
     }
 
+    body.isDelete = 'NO'; // đúng theo Angular PET
     return body;
-  }, [params, pageNumber, pageSize]);
+  };
 
   const loadData = async (page = pageNumber, size = pageSize) => {
     setLoading(true);
     try {
-      // cập nhật page state trước khi build lại body kế tiếp
+      const base = { pageNumber: page, pageSize: size };
+      const body = buildBody(base);
+
+      // LIST
+      const listResp = await getListProductionOrdersPet(body);
+      setRows(listResp?.list || []);
+      setCount(listResp?.count || 0);
       setPageNumber(page);
       setPageSize(size);
 
-      // dùng body đã memo
-      const body = { ...buildBody, pageNumber: page, pageSize: size };
-
-      if (onFetchList) {
-        const res = await onFetchList(body);
-        setRows(res?.list || []);
-        setCount(res?.count || 0);
-      }
-
-      if (onFetchTotalPrice) {
-        const price = await onFetchTotalPrice(body);
-        setTotalPrice(price ?? 0);
-      }
-      if (onFetchTotalQty) {
-        const qty = await onFetchTotalQty(body);
-        setTotalQuantity(qty ?? 0);
-      }
+      // SUMMARY (tổng tiền + tổng số lượng)
+      const sumResp = await getPetSummary(body);
+      setSummary({
+        totalPrice: Number(sumResp || 0),
+      });
     } catch (e) {
       console.error(e);
       message.error('Tải dữ liệu thất bại');
@@ -201,11 +171,10 @@ export default function OrderPet({
   };
 
   useEffect(() => {
-    loadData(1, pageSize);
+    loadData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [buildBody]);
+  }, []);
 
-  // columns theo Angular PET
   const columns = useMemo(() => {
     const cols = [
       {
@@ -230,12 +199,9 @@ export default function OrderPet({
         render: (v) => (v != null ? Number(v).toLocaleString('vi-VN') : ''),
       });
     }
+
     if (isAdmin() || isSubAdmin()) {
-      cols.push({
-        title: 'Số lượng',
-        dataIndex: 'quantity',
-        align: 'right',
-      });
+      cols.push({ title: 'Số lượng', dataIndex: 'quantity', align: 'right' });
     }
 
     cols.push(
@@ -249,24 +215,24 @@ export default function OrderPet({
       {
         title: 'Trạng thái sx',
         dataIndex: 'status',
-        align: 'right',
+        align: 'center',
         render: (s) => (s ? <Tag color={STATUS_TAG[s]}>{STATUS_LABEL[s]}</Tag> : null),
       },
       {
         title: 'Trạng thái thanh toán',
         dataIndex: 'paymentStatus',
-        align: 'right',
+        align: 'center',
         render: (p) => (p ? <Tag color={PAYMENT_TAG[p]}>{PAYMENT_LABEL[p]}</Tag> : null),
-      },
+      }
     );
 
     return cols;
   }, [pageNumber, pageSize]);
 
-  // set param helpers
+  // set params helpers (theo cách bạn viết)
   const setInput = (k) => (e) =>
     setParams((p) => ({ ...p, [k]: e?.target?.value?.trim?.() ?? e?.target?.value ?? undefined }));
-  const setSelect = (k) => (v) => setParams((p) => ({ ...p, [k]: v ?? null }));
+  const setSelect = (k) => (v) => setParams((p) => ({ ...p, [k]: v }));
   const setRange = (fromKey, toKey) => (val) => {
     if (val && val.length === 2) {
       setParams((p) => ({
@@ -280,129 +246,43 @@ export default function OrderPet({
   };
 
   return (
-    <Card title="Danh sách lệnh in PET" bordered={false} className="order-pet">
-      {/* FILTER GỌN (giống form bạn yêu cầu) */}
-      <Form
-        layout="vertical"
-        onFinish={() => loadData(1, pageSize)}
-        className="filter-compact"
-      >
-        <Row gutter={[8, 8]} align="bottom">
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Mã lệnh">
-              <Input allowClear placeholder="Nhập mã lệnh" onChange={setInput('code')} />
-            </Form.Item>
-          </Col>
+    <Card title="Đơn hàng In PET (OrderPET)" bordered={false}>
+      {/* FILTER */}
+      <Form form={form} layout="vertical" onFinish={() => loadData(1, pageSize)}>
+        <Row gutter={[12, 12]}>
+          <Col xs={24} sm={12} lg={6}><Form.Item label="Mã lệnh"><Input allowClear onChange={setInput('code')} /></Form.Item></Col>
+          <Col xs={24} sm={12} lg={6}><Form.Item label="Mã đơn hàng"><Input allowClear onChange={setInput('orderCode')} /></Form.Item></Col>
+          <Col xs={24} sm={12} lg={6}><Form.Item label="Khách hàng"><Input allowClear onChange={setInput('customerName')} /></Form.Item></Col>
+          <Col xs={24} sm={12} lg={6}><Form.Item label="Mã khách hàng"><Input allowClear onChange={setInput('customerCode')} /></Form.Item></Col>
 
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Mã đơn hàng">
-              <Input allowClear placeholder="Nhập mã đơn hàng" onChange={setInput('orderCode')} />
-            </Form.Item>
-          </Col>
+          <Col xs={24} sm={12} lg={6}><Form.Item label="Máy in (tên/khổ/nhân công)"><Input allowClear onChange={setInput('billetPrinterName')} /></Form.Item></Col>
 
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Trạng thái lệnh">
-              <Select allowClear placeholder="Chọn trạng thái" onChange={setSelect('status')}>
-                {statusOptions.map((s) => (
-                  <Option key={String(s.value)} value={s.value}>{s.label}</Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
+          <Col xs={24} sm={12} lg={6}><Form.Item label="Trạng thái lệnh"><Select options={statusOptions} onChange={setSelect('status')} allowClear /></Form.Item></Col>
+          {(isAdmin() || isAccountant()) && (
+            <Col xs={24} sm={12} lg={6}><Form.Item label="Trạng thái thanh toán"><Select options={paymentOptions} onChange={setSelect('paymentStatus')} allowClear /></Form.Item></Col>
+          )}
+          <Col xs={24} sm={12} lg={6}><Form.Item label="Tổng hợp lệnh đang sản xuất"><Select options={beingProducedOptions} onChange={setSelect('listBeingProduced')} allowClear /></Form.Item></Col>
 
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Trạng thái thanh toán">
-              <Select allowClear placeholder="Chọn trạng thái" onChange={setSelect('paymentStatus')}>
-                {paymentOptions.map((s) => (
-                  <Option key={String(s.value)} value={s.value}>{s.label}</Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Khách hàng">
-              <Input allowClear onChange={setInput('customerName')} />
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Mã khách hàng">
-              <Input allowClear onChange={setInput('customerCode')} />
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Thời gian khách đặt">
-              <RangePicker onChange={setRange('fromOrderTime', 'toOrderTime')} format="DD/MM/YYYY" style={{ width: '100%' }} />
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Thời gian tạo lệnh">
-              <RangePicker onChange={setRange('fromCreatedTime', 'toCreatedTime')} format="DD/MM/YYYY" style={{ width: '100%' }} />
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Máy in">
-              <Select allowClear placeholder="Chọn máy in" onChange={setSelect('machine')}>
-                {lstMachine.map((m) => (
-                  <Option key={String(m.value)} value={m.value}>{m.label}</Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Tổng hợp lệnh đang sản xuất">
-              <Select allowClear placeholder="Chọn" onChange={setSelect('listBeingProduced')}>
-                {beingProducedOptions.map((s) => (
-                  <Option key={String(s.value)} value={s.value}>{s.label}</Option>
-                ))}
-              </Select>
-            </Form.Item>
-          </Col>
-
-          <Col xs={24} sm={12} lg={6}>
-            <Form.Item label="Máy in (tên khổ/nhân công)">
-              <Input allowClear placeholder="Tên máy/nhân công ép" onChange={setInput('billetPrinterName')} />
-            </Form.Item>
-          </Col>
+          <Col xs={24} sm={12} lg={6}><Form.Item label="Thời gian khách đặt"><RangePicker onChange={setRange('fromOrderTime', 'toOrderTime')} format="DD/MM/YYYY" style={{ width: '100%' }} /></Form.Item></Col>
+          <Col xs={24} sm={12} lg={6}><Form.Item label="Thời gian tạo lệnh"><RangePicker onChange={setRange('fromCreatedTime', 'toCreatedTime')} format="DD/MM/YYYY" style={{ width: '100%' }} /></Form.Item></Col>
 
           <Col xs={24}>
-            <div className="actions-bar">
-              <Button type="primary" htmlType="submit">Tìm kiếm</Button>
-              <Button
-                style={{ marginLeft: 8 }}
-                onClick={() => {
-                  form.resetFields();
-                  setParams({
-                    code: undefined,
-                    orderCode: undefined,
-                    customerName: undefined,
-                    customerCode: undefined,
-                    status: null,
-                    paymentStatus: null,
-                    listBeingProduced: null,
-                    machine: null,
-                    fromOrderTime: null,
-                    toOrderTime: null,
-                    fromCreatedTime: null,
-                    toCreatedTime: null,
-                    billetPrinterName: undefined,
-                  });
-                  loadData(1, pageSize);
-                }}
-              >
-                Xóa lọc
-              </Button>
-            </div>
+            <Button type="primary" htmlType="submit">Tìm kiếm</Button>
+            <Button style={{ marginLeft: 8 }} onClick={() => {
+              form.resetFields();
+              setParams({
+                code: undefined, orderCode: undefined, customerName: undefined, customerCode: undefined,
+                billetPrinterName: undefined,
+                status: null, paymentStatus: null, listBeingProduced: null, machine: null,
+                fromOrderTime: null, toOrderTime: null, fromCreatedTime: null, toCreatedTime: null,
+              });
+              loadData(1, pageSize);
+            }}>Xóa lọc</Button>
           </Col>
         </Row>
       </Form>
 
-      {/* DASHBOARD (tổng) */}
+      {/* DASHBOARD */}
       <div style={{ padding: '8px 5px' }}>
         <Text style={{ paddingRight: 12 }}>Tổng số lệnh: {count}</Text>
       </div>
@@ -417,7 +297,7 @@ export default function OrderPet({
           size="small"
           pagination={{
             current: pageNumber,
-            pageSize,
+            pageSize: pageSize,
             total: count,
             showSizeChanger: true,
             pageSizeOptions: ['10', '20', '50', '100'],
@@ -432,10 +312,12 @@ export default function OrderPet({
                   <Table.Summary.Cell index={0} colSpan={5} />
                   <Table.Summary.Cell index={5} align="right"><b>Tổng:</b></Table.Summary.Cell>
                   {(isAdmin() || isSubAdmin() || isAccountant()) && (
-                    <Table.Summary.Cell index={6} align="right"><b>{Number(totalPrice).toLocaleString('vi-VN')}</b></Table.Summary.Cell>
+                    <Table.Summary.Cell index={6} align="right">
+                      <b>{Number(summary.totalPrice).toLocaleString('vi-VN')}</b>
+                    </Table.Summary.Cell>
                   )}
                   {(isAdmin() || isSubAdmin()) ? (
-                    <Table.Summary.Cell index={7} align="right"><b>{totalQuantity ?? 0}</b></Table.Summary.Cell>
+                    <Table.Summary.Cell index={7} align="right"><b>{summary.totalQuantity ?? 0}</b></Table.Summary.Cell>
                   ) : null}
                   <Table.Summary.Cell index={8} colSpan={4} />
                 </Table.Summary.Row>

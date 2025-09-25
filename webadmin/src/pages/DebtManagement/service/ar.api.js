@@ -22,6 +22,14 @@ export function getThermalSummary(body) {
   return postJson('/get-thermal-summary-v2', body);
 }
 
+export function getDirectPriceSummary(body) {
+  return postJson('/get-direct-sumary-v2', body);
+}
+
+export function getTotalRevenueCustomer(body) {
+  return postJson('/customers/total-revenue-v5', body);
+}
+
 // placeholder cho hàng tổng, sẽ thay bằng API thật sau
 export function getSumRevenue() {
   return Promise.resolve({

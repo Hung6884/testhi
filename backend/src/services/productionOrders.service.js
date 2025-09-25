@@ -181,3 +181,13 @@ exports.getList = async (body, headers = {}) => {
   const { rows, count } = await repo.findAndCount(p);
   return { list: rows || [], count: Number(count || 0) };
 };
+exports.getSumPrice = async (body, headers = {}) => {
+  // dùng lại toàn bộ chuẩn hoá filter & time-range
+  const p = normalizeFilters(body, headers);
+
+  // gọi repo.sumPrice (đã viết trong repositories/productionOrders.repository.js)
+  const total = await repo.sumPrice(p);
+
+  // đảm bảo trả về số
+  return Number(total || 0);
+};

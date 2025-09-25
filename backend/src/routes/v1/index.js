@@ -17,6 +17,10 @@ const studentRoute = require('./student.route');
 const uploadRoute = require('./upload.route');
 const rollCallStudentRoute = require('./rollCallStudent.route');
 const productionOrdersRoute = require('./productionOrders.route');
+const productionOrderPetRoute = require('./productionOrderPet.route');
+const productionOrderDirectRoute = require('./productionOrderDirect.route');
+const cashbookRoute = require('./cashbook.route');
+
 
 const router = express.Router();
 
@@ -90,6 +94,11 @@ const defaultRoutes = [
     route: rollCallStudentRoute,
   },
   { path: '/production-orders', route: productionOrdersRoute },
+  { path: '/production-order-pets', route: productionOrderPetRoute },
+  { path: '/production-order-direct', route: productionOrderDirectRoute },
+  { path: '/revenue-expenditure-histories', route: cashbookRoute },
+  { path: '/revenue-expenditure-histories', route: cashbookRoute },
+
 
   //   {
   //     path: '/role',

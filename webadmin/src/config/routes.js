@@ -32,19 +32,62 @@ export const IndexLayoutRoutes = [
         {
           title: 'route.order.direct',
           path: 'orderManagement/orderDirect',
-          // component: 'OrderDirect',
+          component: '@/pages/OrderManagement/OrderDirect',
         },
       ],        
       },
       {
         title: 'route.cashbook.list',
-        path: 'debtManagement',
-        // component: 'DebtManagement',
+        path: 'cashbookList',
+        component: 'CashbookList',
       },
       {
         title: 'route.revenue',
-        path: 'debtManagement',
-        // component: 'DebtManagement',
+        path: 'revenue',
+        routes: [
+          {
+          title: 'route.revenue.thermal',
+          path: 'revenueThermal',
+          component: '@/pages/Revenue/RevenueThermal',
+        },
+
+        {
+          title: 'route.revenue.pet',
+          path: 'revenuePet',
+          component: '@/pages/Revenue/RevenuePet',
+        },
+        {
+          title: 'route.revenue.direct',
+          path: 'revenueDirect',
+          component: '@/pages/Revenue/RevenueDirect',
+        },
+        {
+          title: 'route.revenue.customer',
+          path: 'revenueCustomer',
+          component: '@/pages/Revenue/RevenueCustomer',
+        },
+        // {
+        //   title: 'route.revenue.businessTeam',
+        //   path: 'revenueBusinessTeam',
+        //   // component: '@/pages/OrderManagement/OrderDirect',
+        // },
+        // {
+        //   title: 'route.revenue.colorTest',
+        //   path: 'revenueColorTest',
+        //   // component: '@/pages/OrderManagement/OrderDirect',
+        // },
+        // {
+        //   title: 'route.revenue.printTeam',
+        //   path: 'revenuePrintTeam',
+        //   // component: '@/pages/OrderManagement/OrderDirect',
+        // },
+        // {
+        //   title: 'route.revenue.drawingTeam',
+        //   path: 'revenueDrawingTeam',
+        //   // component: '@/pages/OrderManagement/OrderDirect',
+        // },
+
+        ]
       },
       {
         title: 'route.receiptOutside',
@@ -66,50 +109,6 @@ export const IndexLayoutRoutes = [
 
 
   
-  {
-    icon: '',
-    title: 'route.management',
-    path: '/management',
-    routes: [
-      
-     
-    ],
-  },
-  {
-    title: 'route.report',
-    path: '/report',
-    routes: [
-      {
-        title: 'route.report1',
-        path: '/report/report1',
-      },
-      {
-        title: 'route.report2',
-        path: '/report/report2',
-      },
-    ],
-  },
-  {
-    title: 'route.system',
-    path: '/system',
-    routes: [
-      {
-        title: 'route.unit',
-        path: '/system/unit',
-      },
-      {
-        title: 'route.system.parameter',
-        path: '/system/parameters',
-      },
-    ],
-  },
-  {
-    hidden: true,
-    icon: 'FaLeanpub',
-    title: 'route.course',
-    path: '/',
-    redirect: '/management/courses',
-  },
 ];
 
 export const routes = [
