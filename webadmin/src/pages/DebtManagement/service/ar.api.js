@@ -18,6 +18,10 @@ export function getListPaymentHistory(body) {
   return postJson('/customers/get-list-payment-history-v5', body);
 }
 
+export function getThermalSummary(body) {
+  return postJson('/get-thermal-summary-v2', body);
+}
+
 // placeholder cho hàng tổng, sẽ thay bằng API thật sau
 export function getSumRevenue() {
   return Promise.resolve({

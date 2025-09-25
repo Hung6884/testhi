@@ -16,6 +16,7 @@ const rfCardRoute = require('./rfCard.route');
 const studentRoute = require('./student.route');
 const uploadRoute = require('./upload.route');
 const rollCallStudentRoute = require('./rollCallStudent.route');
+const productionOrdersRoute = require('./productionOrders.route');
 
 const router = express.Router();
 
@@ -88,6 +89,7 @@ const defaultRoutes = [
     path: '/roll-call-student',
     route: rollCallStudentRoute,
   },
+  { path: '/production-orders', route: productionOrdersRoute },
 
   //   {
   //     path: '/role',

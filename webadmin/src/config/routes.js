@@ -1,3 +1,4 @@
+import { title } from 'process';
 import { getNotFoundRoute, umiRoutes } from '../utils/routes';
 /**
  * Index Layout 路由页面
@@ -6,58 +7,72 @@ import { getNotFoundRoute, umiRoutes } from '../utils/routes';
 export const IndexLayoutRoutes = [
   {
     icon: '',
-    title: 'route.debtManagement',
-    path: '/debtManagement',
-    component: 'DebtManagement', 
+    title: 'route.accounting',
+    path: '/accounting',
+    routes: [
+      {
+        title: 'route.debtManagement',
+        path: 'debtManagement',
+        component: 'DebtManagement',
+      },
+      {
+        title: 'route.orderManagement',
+        path: 'orderManagement',
+        routes: [
+        {
+          title: 'route.order.thermal',
+          path: 'orderManagement/orderThermal',
+          component: '@/pages/OrderManagement/OrderThermal',
+        },
+        {
+          title: 'route.order.pet',
+          path: 'orderManagement/orderPet',
+          component: '@/pages/OrderManagement/OrderPet',
+        },
+        {
+          title: 'route.order.direct',
+          path: 'orderManagement/orderDirect',
+          // component: 'OrderDirect',
+        },
+      ],        
+      },
+      {
+        title: 'route.cashbook.list',
+        path: 'debtManagement',
+        // component: 'DebtManagement',
+      },
+      {
+        title: 'route.revenue',
+        path: 'debtManagement',
+        // component: 'DebtManagement',
+      },
+      {
+        title: 'route.receiptOutside',
+        path: 'debtManagement',
+        // component: 'DebtManagement',
+      },
+      {
+        title: 'route.orderDefects',
+        path: 'debtManagement',
+        // component: 'DebtManagement',
+      },
+      
+    ],
   },
+
+
+
+
+
+
+  
   {
     icon: '',
     title: 'route.management',
     path: '/management',
     routes: [
-      {
-        icon: 'FaSync',
-        title: 'route.sync',
-        path: '/management/sync',
-        component: '@/pages/SyncData',
-      },
-      {
-        icon: 'FaLeanpub',
-        title: 'route.course',
-        path: '/management/courses',
-        component: '@/pages/Course',
-      },
-
-      {
-        icon: 'FaLeanpub',
-        title: 'route.teacher',
-        path: '/management/teachers',
-        component: '@/pages/Teacher',
-      },
-      {
-        icon: 'FaUserGraduate',
-        title: 'route.student',
-        path: '/management/students',
-        component: '@/pages/Student',
-      },
-      {
-        icon: 'FaCarSide',
-        title: 'route.vehicle',
-        path: '/management/vehicles',
-        component: '@/pages/Vehicle',
-      },
-      {
-        icon: 'FaMicrochip',
-        title: 'route.datDevice',
-        path: '/management/dat-devices',
-        component: '@/pages/DatDevice',
-      },
-      {
-        icon: 'FaLeanpub',
-        title: 'route.rfCard',
-        path: '/management/rfCards',
-        component: '@/pages/RFCard',
-      },
+      
+     
     ],
   },
   {
