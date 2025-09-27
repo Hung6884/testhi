@@ -91,12 +91,12 @@ export const IndexLayoutRoutes = [
       },
       {
         title: 'route.receiptOutside',
-        path: 'debtManagement',
-        // component: 'DebtManagement',
+        path: 'receiptOutside',
+        component: 'ReceiptOutSide',
       },
       {
         title: 'route.orderDefects',
-        path: 'debtManagement',
+        path: 'orderDefects',
         // component: 'DebtManagement',
       },
       

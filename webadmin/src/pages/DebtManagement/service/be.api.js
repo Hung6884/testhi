@@ -1,4 +1,13 @@
-const API_BASE = 'http://localhost:3000/api/v1';
+const RAW_BASE =
+  (typeof window !== 'undefined' && window.env && window.env.API_HOST) ||
+  '/api';
+
+const API_BASE = RAW_BASE.replace(/\/$/, ''); // bỏ dấu / cuối nếu có
+
+function joinUrl(base, path) {
+  const p = path.startsWith('/') ? path : `/${path}`;
+  return `${base}${p}`;
+}
 
 async function postJson(path, body) {
   const token = localStorage.getItem('token'); // nếu có lưu trong localStorage
@@ -44,4 +53,7 @@ export function getSumaryPriceDirect(body) {
 }
 export function getCustomers(body) {
   return postJson('/customers/get-list', body);
+}
+export function getReceiptList(body) {
+  return postJson('/receipts/get-list', body);
 }

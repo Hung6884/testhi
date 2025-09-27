@@ -43,6 +43,7 @@
     "dva-model-persist": "1.0.0",
     "eslint-plugin-flowtype": "8.0.3",
     "eslint-plugin-jsx-a11y": "6.10.0",
+    "express": "4",
     "isbinaryfile": "5.0.0",
     "joi": "17.13.3",
     "js-cookie": "3.0.5",

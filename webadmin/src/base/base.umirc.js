@@ -85,11 +85,14 @@ export const baseDefineConfig = ({ settings, routes }) =>
       ),
     },
     proxy: {
-      '/api': {
-        target: 'http://localhost:3000',
-        changeOrigin: true,
-      },
-    },
+  '/api': {
+    target: 'http://localhost:3000',
+    changeOrigin: true,
+    // nếu backend thật sự có prefix /api/v1 thì thêm dòng này
+    pathRewrite: { '^/api': '/api/v1' },
+  },
+},
+
     chainWebpack(memo /* ,  { webpack } */) {
       // Add `exclude` to the built-in SVG rule.
       memo.module

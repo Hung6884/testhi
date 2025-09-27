@@ -20,6 +20,7 @@ const productionOrdersRoute = require('./productionOrders.route');
 const productionOrderPetRoute = require('./productionOrderPet.route');
 const productionOrderDirectRoute = require('./productionOrderDirect.route');
 const cashbookRoute = require('./cashbook.route');
+const receiptRoute = require('./receipt.route');
 
 
 const router = express.Router();
@@ -98,6 +99,7 @@ const defaultRoutes = [
   { path: '/production-order-direct', route: productionOrderDirectRoute },
   { path: '/revenue-expenditure-histories', route: cashbookRoute },
   { path: '/revenue-expenditure-histories', route: cashbookRoute },
+  { path: '/receipts', route: receiptRoute },
 
 
   //   {
